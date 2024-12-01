@@ -1,2 +1,2 @@
-p1: {sum abs (-) .' flip asc each flip "J"$ "   " vs/: x};
-p2: {sum first[x] * count each where each last[x] =/: first x: asc each flip "J"$ "   " vs/: x};
+p1: {sum abs (-/) asc each flip "J"$ "   " vs/: x};
+p2: {sum x[0] * ('[count;where]) each x[1] =/: first x: asc each flip "J"$ "   " vs/: x};
