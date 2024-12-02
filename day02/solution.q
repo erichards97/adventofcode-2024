@@ -1,0 +1,1 @@
+p1: {sum raze (all each') (1_' deltas each  "J"$ " " vs' x) within/: ((-3; -1); (1; 3))};
