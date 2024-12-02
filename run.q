@@ -19,4 +19,4 @@ run: {
 run 1;
 if[`p2 in key `.; show "---"; run 2];
 
-exit 0;
+if[not `debug in key args; exit 0];
