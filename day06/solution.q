@@ -1,3 +1,5 @@
+allPos: ();
+
 move: {[line; pos] / Moves the guard left (as far as possible) along a 2D line
     wall: max walls where (walls: where "#" = line) < pos;
     wall: $[wall ~ -0W; -1; wall];
@@ -11,6 +13,8 @@ iter: {[input]
     x: input 2; 
     y: input 3;
     if[any (0; count[grid]-1) in\: (x; y); :input];
+    allPos,: enlist (guard; x; y);
+    if[count[allPos] <> count distinct allPos; :(grid; guard; x; y; 1b)]
 
     i: $[guard in "^v"; ::; y];
     j: $[guard in "^v"; x; ::];
@@ -24,14 +28,27 @@ iter: {[input]
         .[grid; (i; j); :; transform res 0]; / Updated grid
         $[guard = "^"; ">"; guard = ">"; "v"; guard = "v"; "<"; guard = "<"; "^"]; / Next guard direction
         $[guard in "^v"; x; resPos]; / Next x
-        $[guard in "^v"; resPos; y] / Next y
+        $[guard in "^v"; resPos; y]; / Next y
+        0b / Loop detected
     )
  };
 
-
 p1: {[grid]
-    startX: first[where any "^<>v" =\: raze grid] mod count first grid;
-    startY: floor first[where any "^<>v" =\: raze grid] % count first grid;
-    res: (iter\) (grid; .[grid; (startY; startX)]; startX; startY);
-    sum "X" = raze first last res
+    startX: first[where any "^<>v" =\: raze grid] mod count grid;
+    startY: floor first[where any "^<>v" =\: raze grid] % count grid;
+    sum "X" = raze first last (iter\) (grid; .[grid; (startY; startX)]; startX; startY)
+ };
+
+p2: {[grid]
+    `allPos set ();
+    startX: first[where any "^<>v" =\: raze grid] mod count grid;
+    startY: floor first[where any "^<>v" =\: raze grid] % count grid;
+    res: raze first last (iter\) (grid; .[grid; (startY; startX)]; startX; startY);
+
+    visited: flip ((where "X" = res) mod count grid; floor (where "X" = res) % count grid);
+
+    sum {[grid; startX; startY; obsX; obsY]
+        `allPos set ();
+        last last (iter\) (.[grid; (obsY; obsX); :; "#"]; .[grid; (startY; startX)]; startX; startY)
+    }[grid; startX; startY] .' visited except enlist (startX; startY)
  };
