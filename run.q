@@ -1,4 +1,5 @@
 / Example: q run.q -day 01 [-example] [-verify]
+system "P 0";
 \l util.q
 args: .Q.opt .z.x;
 
